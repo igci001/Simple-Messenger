@@ -1,0 +1,588 @@
+openapi: 3.0.3
+info:
+  title: API for a Simple Messenger Application
+  description: API for a Simple Messenger Application
+  version: 1.0.0
+servers:
+  - url: '/api/v1'
+paths:
+  /users:
+    post:
+      tags:
+        - User
+      summary: Create User
+      description: Creating an User
+      operationId: createUser
+      requestBody:
+        description: User Object with all Information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    put:
+      tags:
+        - User
+      summary: Update User
+      description: Update an User
+      operationId: updateUser
+      requestBody:
+        description: User Object with updated Information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        404:
+          description: User not found
+
+  /users/{id}:
+    get:
+      tags:
+        - User
+      summary: Find User
+      description: Find User Information
+      operationId: findUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        404:
+          description: User not found
+    delete:
+      tags:
+        - User
+      summary: Delete User
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the user
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: User deleted Successfully
+        404:
+          description: User to delete not found
+
+  /chats:
+    post:
+      tags:
+        - Chat
+      summary: Create chat
+      operationId: createChat
+      requestBody:
+        description: Chat Object with all Information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+    put:
+      tags:
+        - Chat
+      summary: Update Chat
+      operationId: updateChat
+      requestBody:
+        description: Chat Object with updated Information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        404:
+          description: Chat not found
+
+  /chats/{id}:
+    get:
+      tags:
+        - Chat
+      summary: Find chat
+      operationId: findChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+        404:
+          description: Chat not found
+    delete:
+      tags:
+        - Chat
+      summary: Delete chat
+      operationId: deleteChat
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Chat deleted Successfully
+        404:
+          description: Chat to delete not found
+  /chats/{chatId}/messages:
+    post:
+      tags:
+        - Message
+      summary: Create message
+      operationId: createMessage
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Message Object with all Information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /chats/{chatId}/messages/{messageId}:
+    put:
+      tags:
+        - Message
+      summary: Update Message
+      operationId: updateMessage
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          description: The unique identifier of the message
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Message Object with updated Information
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        404:
+          description: Message not found
+
+    delete:
+      tags:
+        - Message
+      summary: Delete message
+      operationId: deleteMessage
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          description: The unique identifier of the message
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Message deleted Successfully
+        404:
+          description: Message to delete not found
+
+  /chats/{chatId}/members:
+    post:
+      tags:
+        - Member
+      summary: Create member
+      operationId: createMember
+      requestBody:
+        description: Member Object with chatId, userId and Role
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMemberRequest'
+
+      responses:
+        201:
+          description: Member added Successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMemberResponse'
+
+
+  /chats/{chatId}/members/{memberId}/{userRole}:
+    put:
+      tags:
+        - Member
+      summary: Change Member Role
+      operationId: changeMemberRole
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
+        - name: memberId
+          in: path
+          required: true
+          description: The unique identifier of the User
+          schema:
+            type: string
+            format: uuid
+        - name: userRole
+          in: path
+          required: true
+          description: The new MemberRole
+          schema:
+            $ref: '#/components/schemas/UserRole'
+      responses:
+        204:
+          description: MemberRole changed Successfully
+
+
+  /chats/{chatId}/members/{memberId}:
+    delete:
+      tags:
+        - Member
+      summary: Delete member
+      operationId: deleteMember
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
+        - name: memberId
+          in: path
+          required: true
+          description: The unique identifier of the User
+          schema:
+            type: string
+            format: uuid
+      responses:
+        204:
+          description: Member deleted Successfully
+        404:
+          description: Member to delete not found
+
+components:
+  schemas:
+    UserRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        surname:
+          type: string
+          nullable: false
+        lastName:
+          type: string
+          nullable: false
+        birthday:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        description:
+          type: string
+          nullable: true
+      required:
+        - surname
+        - lastName
+        - birthday
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+        createdDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        lastModifiedDate:
+          example: "2024-10-12T12:34:56.123456789Z"
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          nullable: false
+        surname:
+          type: string
+          nullable: false
+        lastName:
+          type: string
+          nullable: false
+        birthday:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        description:
+          type: string
+          nullable: true
+      required:
+        - surname
+        - lastName
+        - birthday
+        - id
+
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+        surname:
+          type: string
+          nullable: false
+        lastName:
+          type: string
+          nullable: false
+      required:
+        - surname
+        - lastName
+        - id
+
+    ChatRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: true
+        name:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: true
+        owner:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - name
+        - owner
+
+    ChatResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+        createdDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        lastModifiedDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        name:
+          type: string
+          nullable: false
+        description:
+          type: string
+          nullable: true
+        owner:
+          $ref: '#/components/schemas/UserSummary'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMemberSummary'
+        messages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageResponse'
+      required:
+        - id
+        - name
+        - owner
+
+    ChatSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+        name:
+          type: string
+          nullable: false
+      required:
+        - id
+        - name
+
+    MessageRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          nullable: false
+        author:
+          type: string
+          format: uuid
+          nullable: false
+      required:
+        - message
+        - author
+    MessageResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          nullable: false
+        createdDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        lastModifiedDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        message:
+          type: string
+          nullable: false
+        author:
+          $ref: '#/components/schemas/UserSummary'
+      required:
+        - id
+        - message
+        - author
+
+    ChatMemberRequest:
+      type: object
+      properties:
+        chatId:
+          type: string
+          format: uuid
+          nullable: false
+        userId:
+          type: string
+          format: uuid
+          nullable: false
+        userRole:
+          $ref: '#/components/schemas/UserRole'
+
+    ChatMemberResponse:
+      type: object
+      properties:
+        createdDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        lastModifiedDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        userRole:
+          $ref: '#/components/schemas/UserRole'
+        chat:
+          $ref: '#/components/schemas/ChatSummary'
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+    ChatMemberSummary:
+      type: object
+      properties:
+        createdDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        lastModifiedDate:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
+          example: "2024-10-12T12:34:56.123456789Z"
+          nullable: false
+        userRole:
+          $ref: '#/components/schemas/UserRole'
+        user:
+          $ref: '#/components/schemas/UserSummary'
+
+    UserRole:
+      type: string
+      enum:
+        - OWNER
+        - ADMIN
+        - MEMBER
+        - VISITOR
+

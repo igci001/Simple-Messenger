@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <!-- Ensure SockJS is loaded before Stomp -->
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    <script type="text/javascript">
+        var stompClient = null;
+
+
+        function setConnected(connected) {
+            document.getElementById('connect').disabled = connected;
+            document.getElementById('disconnect').disabled = !connected;
+            document.getElementById('conversationDiv').style.visibility
+                = connected ? 'visible' : 'hidden';
+            document.getElementById('response').innerHTML = '';
+        }
+
+        function connect() {
+            var chat = document.getElementById('chatId').value;
+            console.log("Before Socket")
+            var socket = new SockJS('/websocket');
+            console.log("After Socket")
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function(frame) {
+                setConnected(true);
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/' + chat + '/messages', function(messageOutput) {
+                    showMessageOutput(JSON.parse(messageOutput.body));
+                });
+            });
+        }
+
+        function disconnect() {
+            if(stompClient != null) {
+                stompClient.disconnect();
+            }
+            setConnected(false);
+            console.log("Disconnected");
+        }
+
+        function sendMessage() {
+            var chat = document.getElementById('chatId').value;
+            var text = document.getElementById('text').value;
+            stompClient.send("/app/websocket/" + chat, {},
+                JSON.stringify({
+                    "message":"asdasdasd",
+                    "author": "9d8f112b-1557-41d4-b056-72dd3fb4d714"
+                }));
+        }
+
+        function showMessageOutput(messageOutput) {
+            console.log(messageOutput);
+            var response = document.getElementById('response');
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+
+            // Display the message based on the new response format
+            p.appendChild(document.createTextNode(
+                messageOutput.author.surname + " " + messageOutput.author.lastName + ": " +
+                messageOutput.message + " (" + new Date(messageOutput.createdDate).toLocaleTimeString() + ")"
+            ));
+
+            response.appendChild(p);
+        }
+
+    </script>
+
+</head>
+<body onload="disconnect()">
+<div>
+    <div>
+        <input type="text" id="chatId" placeholder="Choose a Chatroom"/>
+    </div>
+    <br />
+    <div>
+        <button id="connect" onclick="connect();">Connect</button>
+        <button id="disconnect" disabled="disabled" onclick="disconnect();">
+            Disconnect
+        </button>
+    </div>
+    <br />
+    <div id="conversationDiv">
+        <input type="text" id="text" placeholder="Write a message..."/>
+        <button id="sendMessage" onclick="sendMessage();">Send</button>
+        <p id="response"></p>
+    </div>
+</div>
+
+</body>
+</html>
