@@ -1,8 +1,8 @@
 package com.messenger.simplemessenger.user.adapter.out;
 
 import com.messenger.simplemessenger.user.UserMapper;
-import com.messenger.simplemessenger.user.port.out.UserRepository;
 import com.messenger.simplemessenger.user.model.dto.User;
+import com.messenger.simplemessenger.user.port.out.UserRepository;
 import com.messenger.simplemessenger.user.port.out.UserPort;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.model.UserRequest;

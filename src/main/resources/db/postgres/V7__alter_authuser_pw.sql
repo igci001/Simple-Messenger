@@ -1,0 +1,1 @@
+ALTER TABLE auth_users ALTER COLUMN password TYPE VARCHAR(60);

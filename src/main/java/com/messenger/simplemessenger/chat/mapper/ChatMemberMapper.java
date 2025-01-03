@@ -3,6 +3,7 @@ package com.messenger.simplemessenger.chat.mapper;
 import com.messenger.simplemessenger.chat.port.out.repository.ChatRepository;
 import com.messenger.simplemessenger.chat.model.ChatMemberEntity;
 import com.messenger.simplemessenger.chat.model.dto.ChatMember;
+import com.messenger.simplemessenger.user.UserMapper;
 import com.messenger.simplemessenger.user.port.out.UserRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,6 +26,8 @@ public abstract class ChatMemberMapper {
 
     @Mapping(target = "chat.members", ignore = true)
     @Mapping(target = "chat.messages", ignore = true)
+    @Mapping(target = "user.enteredChats", ignore = true)
+    @Mapping(target = "chat.owner.enteredChats", ignore = true)
     public abstract ChatMember toDomain(ChatMemberEntity chatMemberEntity);
     public  ChatMemberEntity toEntity(ChatMember chatMember){
         var member = userRepository

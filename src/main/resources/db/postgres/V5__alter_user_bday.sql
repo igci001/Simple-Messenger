@@ -1,0 +1,2 @@
+ALTER TABLE "user"
+    ALTER COLUMN birth_day DROP NOT NULL;

@@ -4,8 +4,62 @@ info:
   description: API for a Simple Messenger Application
   version: 1.0.0
 servers:
-  - url: '/api/v1'
+  - url: http://localhost:8080
 paths:
+  /register:
+    post:
+      tags:
+        -Auth
+      summary: Registration of new Users
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        204:
+          description: User deleted Successfully
+    get:
+      tags:
+        -Auth
+      summary: Registration of new Users
+      operationId: registerUsertest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        204:
+          description: User deleted Successfully
+
+
+  /signin:
+    post:
+      tags:
+        - Auth
+      summary: authenticateUser
+      description: Authenticating an User
+      operationId: authenticateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/LoginResponse'
+        401:
+          description: Unauthorized - Bad credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
   /users:
     post:
       tags:
@@ -207,6 +261,13 @@ paths:
       summary: Update Message
       operationId: updateMessage
       parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
         - name: messageId
           in: path
           required: true
@@ -236,6 +297,13 @@ paths:
       summary: Delete message
       operationId: deleteMessage
       parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
         - name: messageId
           in: path
           required: true
@@ -255,6 +323,14 @@ paths:
         - Member
       summary: Create member
       operationId: createMember
+      parameters:
+        - name: chatId
+          in: path
+          required: true
+          description: The unique identifier of the chat
+          schema:
+            type: string
+            format: uuid
       requestBody:
         description: Member Object with chatId, userId and Role
         content:
@@ -339,7 +415,7 @@ components:
           type: string
           format: uuid
           nullable: true
-        surname:
+        firstName:
           type: string
           nullable: false
         lastName:
@@ -354,7 +430,7 @@ components:
           type: string
           nullable: true
       required:
-        - surname
+        - firstName
         - lastName
         - birthday
 
@@ -375,7 +451,7 @@ components:
           type: string
           pattern: '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,9}Z$'
           nullable: false
-        surname:
+        firstName:
           type: string
           nullable: false
         lastName:
@@ -389,8 +465,12 @@ components:
         description:
           type: string
           nullable: true
+        enteredChats:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatResponse'
       required:
-        - surname
+        - firstName
         - lastName
         - birthday
         - id
@@ -402,14 +482,14 @@ components:
           type: string
           format: uuid
           nullable: false
-        surname:
+        firstName:
           type: string
           nullable: false
         lastName:
           type: string
           nullable: false
       required:
-        - surname
+        - firstName
         - lastName
         - id
 
@@ -586,3 +666,49 @@ components:
         - MEMBER
         - VISITOR
 
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: false
+        password:
+          type: string
+          nullable: false
+      required:
+        - username
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+
+        username:
+          type: string
+          nullable: false
+        roles:
+          type: array
+          items:
+            type: string
+
+        jwtToken:
+          type: string
+          nullable: false
+
+      required:
+        - username
+        - roles
+        - jwtToken
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Bad credentials
+        status:
+          type: boolean
+          example: false
+      required:
+        - message
+        - status

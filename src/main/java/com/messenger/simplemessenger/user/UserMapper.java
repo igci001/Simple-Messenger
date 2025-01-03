@@ -1,5 +1,6 @@
 package com.messenger.simplemessenger.user;
 
+import com.messenger.simplemessenger.chat.mapper.ChatMapper;
 import com.messenger.simplemessenger.user.model.UserEntity;
 import com.messenger.simplemessenger.user.model.dto.User;
 import org.mapstruct.Mapper;
@@ -11,7 +12,7 @@ import org.openapitools.model.UserResponse;
 import java.time.Instant;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ChatMapper.class})
 public interface UserMapper {
 
     User toDomain(UserEntity userEntity);

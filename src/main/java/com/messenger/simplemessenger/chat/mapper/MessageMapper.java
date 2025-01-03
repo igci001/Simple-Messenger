@@ -27,6 +27,7 @@ public abstract class MessageMapper {
     private ChatRepository chatRepository;
 
     @Mapping(target = "chatId", source = "messageEntity.chat.id")
+    @Mapping(target = "author.enteredChats", ignore = true)
     public abstract Message toDomain(MessageEntity messageEntity);
     public MessageEntity toEntity(Message message) {
         UserEntity user = userRepository.findById(message.getAuthor().getId()).orElseThrow(

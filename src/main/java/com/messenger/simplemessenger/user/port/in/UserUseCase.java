@@ -1,6 +1,5 @@
 package com.messenger.simplemessenger.user.port.in;
 
-import com.messenger.simplemessenger.user.model.dto.User;
 import org.openapitools.model.UserRequest;
 import org.openapitools.model.UserResponse;
 

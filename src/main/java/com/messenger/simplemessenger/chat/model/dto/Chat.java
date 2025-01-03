@@ -1,6 +1,5 @@
 package com.messenger.simplemessenger.chat.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.messenger.simplemessenger.user.model.dto.User;
 import lombok.*;
 import org.springframework.lang.Nullable;

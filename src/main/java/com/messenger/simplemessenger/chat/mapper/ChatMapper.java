@@ -3,6 +3,7 @@ package com.messenger.simplemessenger.chat.mapper;
 
 import com.messenger.simplemessenger.chat.model.dto.Chat;
 import com.messenger.simplemessenger.chat.model.ChatEntity;
+import com.messenger.simplemessenger.chat.model.dto.ChatMember;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -36,4 +37,15 @@ public interface ChatMapper {
     default String convertToString(Instant instant) {
         return instant.toString();
     }
+
+
+    @Mapping(target = "id", source = "chat.id")
+    @Mapping(target = "createdDate", source = "chat.createdDate")
+    @Mapping(target = "lastModifiedDate", source = "chat.lastModifiedDate")
+    @Mapping(target = "description", source = "chat.description")
+    @Mapping(target = "owner", source = "chat.owner")
+    @Mapping(target = "members", source = "chat.members")
+    @Mapping(target = "messages", source = "chat.messages")
+    @Mapping(target = "name", source = "chat.name")
+    ChatResponse mapChatMemberToChatResponse(ChatMember chatMember);
 }

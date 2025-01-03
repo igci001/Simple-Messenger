@@ -50,18 +50,18 @@ public class ChatController implements ChatsApi {
 
 
     @Override
-    public ResponseEntity<MessageResponse> updateMessage(UUID messageId, String message){
+    public ResponseEntity<MessageResponse> updateMessage(UUID chatId, UUID messageId, String message){
         return new ResponseEntity<>(messageUseCase.updateMessage(messageId, message), HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Void> deleteMessage(UUID messageId){
+    public ResponseEntity<Void> deleteMessage(UUID chatId, UUID messageId){
         messageUseCase.deleteMessageById(messageId);
         return ResponseEntity.noContent().build();
     }
 
     @Override
-    public ResponseEntity<ChatMemberResponse> createMember(ChatMemberRequest chatMemberRequest){
+    public ResponseEntity<ChatMemberResponse> createMember(UUID chatId, ChatMemberRequest chatMemberRequest){
         return new ResponseEntity<>(chatMemberUseCase.createChatMember(chatMemberRequest),HttpStatus.CREATED);
     }
 
